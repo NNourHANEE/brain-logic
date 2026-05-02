@@ -5,6 +5,7 @@ on:
     branches: [ "**" ]
   pull_request:
     branches: [ "**" ]
+  workflow_dispatch:
 
 jobs:
   build:
@@ -23,11 +24,9 @@ jobs:
           cache: maven
 
       - name: Build fat JAR
-        working-directory: mobile
         run: mvn package -DskipTests --no-transfer-progress
 
       - name: Verify JAR is executable
-        working-directory: mobile
         run: |
           JAR=target/jeu-reflexion-jee-1.0.0.jar
           echo "JAR size: $(du -sh $JAR | cut -f1)"
@@ -37,5 +36,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: jeu-reflexion-jee
-          path: mobile/target/jeu-reflexion-jee-1.0.0.jar
+          path: target/jeu-reflexion-jee-1.0.0.jar
           retention-days: 7
