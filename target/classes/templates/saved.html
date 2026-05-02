@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Parties sauvegardées</title>
+  <link rel="icon" th:href="@{/favicon.svg}" type="image/svg+xml">
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<main class="page">
+  <header class="list-header">
+    <a class="text-link" th:href="@{/}">Accueil</a>
+    <h1>Parties sauvegardées</h1>
+    <p class="message success" th:if="${message}" th:text="${message}">Sauvegardé</p>
+  </header>
+
+  <section class="empty card-panel" th:if="${games.isEmpty()}">
+    <h2>Aucune partie sauvegardée</h2>
+    <p>Lancez une partie, puis utilisez le bouton Sauvegarder pour la reprendre plus tard.</p>
+  </section>
+
+  <section class="saved-list" th:if="${!games.isEmpty()}">
+    <article class="card-panel saved-card" th:each="game : ${games}">
+      <div>
+        <h2 th:text="${game.playerName}">Joueur</h2>
+        <p th:text="${game.gameType.label + ' · Niveau ' + game.difficulty.label}">Niveau</p>
+      </div>
+      <div class="progress"><span th:style="${'width:' + game.progressPercent + '%'}"></span></div>
+      <p th:text="${game.matchedPairs + '/' + game.totalPairs + ' réussites · ' + game.moves + ' coups'}">Progression</p>
+      <a class="primary-button" th:href="@{/game/{id}(id=${game.id})}">Reprendre</a>
+    </article>
+  </section>
+</main>
+</body>
+</html>

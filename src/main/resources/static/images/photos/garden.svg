@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#a4dcff"/>
+      <stop offset="1" stop-color="#fff5c0"/>
+    </linearGradient>
+    <linearGradient id="grass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#7ec850"/>
+      <stop offset="1" stop-color="#3f8a2d"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="260" fill="url(#sky)"/>
+  <rect y="260" width="400" height="140" fill="url(#grass)"/>
+  <circle cx="320" cy="80" r="40" fill="#ffd24a"/>
+  <circle cx="320" cy="80" r="55" fill="#ffd24a" opacity=".25"/>
+  <ellipse cx="80" cy="100" rx="55" ry="22" fill="#fff" opacity=".85"/>
+  <ellipse cx="200" cy="70" rx="70" ry="24" fill="#fff" opacity=".85"/>
+  <polygon points="100,260 160,140 220,260" fill="#3a8b4d"/>
+  <polygon points="180,260 250,120 320,260" fill="#2a6b3c"/>
+  <rect x="60" y="280" width="60" height="60" fill="#c97a3c"/>
+  <polygon points="50,280 90,240 130,280" fill="#a64b2a"/>
+  <rect x="80" y="305" width="20" height="35" fill="#5a3520"/>
+  <circle cx="60" cy="320" r="8" fill="#ff5da8"/>
+  <circle cx="140" cy="340" r="8" fill="#ff8a5c"/>
+  <circle cx="200" cy="350" r="8" fill="#fff05c"/>
+  <circle cx="260" cy="335" r="8" fill="#ff5da8"/>
+  <circle cx="330" cy="345" r="8" fill="#6f58e8"/>
+  <path d="M0 360 Q200 330 400 360 L400 400 L0 400 Z" fill="#2a6b3c"/>
+</svg>

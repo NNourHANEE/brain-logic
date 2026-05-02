@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+  <defs>
+    <linearGradient id="sky2" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2c1a52"/>
+      <stop offset=".4" stop-color="#ff5da8"/>
+      <stop offset=".7" stop-color="#ff9b3a"/>
+      <stop offset="1" stop-color="#fff05c"/>
+    </linearGradient>
+    <linearGradient id="sea" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ff8a3a"/>
+      <stop offset="1" stop-color="#3a1c5e"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="240" fill="url(#sky2)"/>
+  <rect y="240" width="400" height="160" fill="url(#sea)"/>
+  <circle cx="200" cy="240" r="70" fill="#fff7c0"/>
+  <circle cx="200" cy="240" r="95" fill="#fff7c0" opacity=".25"/>
+  <rect x="0" y="248" width="400" height="3" fill="#fff" opacity=".4"/>
+  <rect x="50" y="262" width="80" height="2" fill="#fff" opacity=".5"/>
+  <rect x="200" y="278" width="120" height="2" fill="#fff" opacity=".5"/>
+  <rect x="40" y="296" width="160" height="2" fill="#fff" opacity=".4"/>
+  <rect x="220" y="316" width="120" height="2" fill="#fff" opacity=".4"/>
+  <polygon points="0,400 0,330 120,360 80,400" fill="#1a0a30"/>
+  <polygon points="400,400 400,300 280,360 320,400" fill="#1a0a30"/>
+  <circle cx="60" cy="60" r="3" fill="#fff"/>
+  <circle cx="120" cy="40" r="2" fill="#fff"/>
+  <circle cx="320" cy="50" r="3" fill="#fff"/>
+  <circle cx="360" cy="90" r="2" fill="#fff"/>
+</svg>

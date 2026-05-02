@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grille des nombres</title>
+  <link rel="icon" th:href="@{/favicon.svg}" type="image/svg+xml">
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+  <script defer th:src="@{/js/effects.js}"></script>
+</head>
+<body data-page="numbers"
+      th:data-result-sound="${game.message}"
+      th:data-outcome="${game.outcome}"
+      th:data-rules-key="${'numbers-' + game.difficulty.name()}">
+<main class="page game-page">
+  <header class="game-header card-panel">
+    <div>
+      <a class="text-link" th:href="@{/}">Accueil</a>
+      <h1 th:text="${game.gameType.label}">Grille</h1>
+      <p th:text="${game.playerName + ' · Niveau ' + game.difficulty.label}">Joueur</p>
+    </div>
+    <div class="header-actions">
+      <button class="icon-button" type="button" data-open-popup="rulesPopup" data-sound="tap" aria-label="Règles du jeu">?</button>
+      <form th:action="@{/game/{id}/save(id=${game.id})}" method="post">
+        <button class="secondary-button" type="submit" data-sound="tap">Sauvegarder</button>
+      </form>
+    </div>
+  </header>
+
+  <section class="stats card-panel">
+    <div><span>Coups</span><strong th:text="${game.moves}">0</strong></div>
+    <div><span>Validés</span><strong th:text="${game.matchedPairs + '/' + game.totalPairs}">0/16</strong></div>
+    <div><span>Cible</span><strong th:text="${game.numbersNext}">1</strong></div>
+    <div class="timer" data-timer
+         th:data-elapsed-seconds="${game.elapsedSeconds}"
+         th:data-time-limit-seconds="${game.timeLimitSeconds}"
+         th:data-tick-form-id="|tickForm-${game.id}|">
+      <span>Temps</span><strong>00:00</strong>
+    </div>
+  </section>
+
+  <p class="message" th:if="${game.message}" th:text="${game.message}">Message</p>
+
+  <th:block th:replace="~{fragments :: tickForm(${game})}"></th:block>
+
+  <section class="card-panel numbers-wrap">
+    <p class="eyebrow">
+      Tapez les nombres dans
+      <strong th:text="${game.numbersDescending ? 'l''ordre décroissant' : 'l''ordre croissant'}">l'ordre croissant</strong>.
+      Prochain : <strong th:text="${game.numbersNext}">1</strong>
+    </p>
+    <div class="numbers-grid" th:style="|--size: ${game.numbersSize};|">
+      <th:block th:each="value, it : ${game.numbersGrid}">
+        <form th:action="@{/game/{id}/number(id=${game.id})}" method="post" class="number-form">
+          <input type="hidden" name="cell" th:value="${it.index}">
+          <button type="submit" class="number-cell" data-sound="tap"
+                  th:disabled="${value == 0}"
+                  th:classappend="${value == 0 ? ' done' : (value == game.numbersNext ? ' hint' : '')}">
+            <span th:if="${value != 0}" th:text="${value}">1</span>
+            <span th:unless="${value != 0}" class="check">✓</span>
+          </button>
+        </form>
+      </th:block>
+    </div>
+  </section>
+
+  <div class="popup rules-popup" id="rulesPopup" data-popup aria-hidden="true">
+    <div class="popup-content">
+      <h2>Règles — Grille des nombres</h2>
+      <p>La grille contient les nombres de <strong>1</strong> à <strong th:text="${game.totalPairs}">16</strong> mélangés. Tapez-les <strong>dans l'ordre</strong>, le plus vite possible.</p>
+      <p>Une bonne case devient verte (✓), une erreur fait clignoter la grille en rouge.</p>
+      <p th:if="${game.numbersShuffleOnMiss}" class="rule-extra">
+        Niveau <strong th:text="${game.difficulty.label}">Expert</strong> : à chaque erreur, les nombres restants sont <strong>mélangés à nouveau</strong> — concentrez-vous !
+      </p>
+      <p th:if="${game.numbersDescending}" class="rule-extra">
+        Niveau <strong>Maître</strong> : ordre <strong>décroissant</strong> — vous commencez par le plus grand.
+      </p>
+      <button class="primary-button" type="button" data-close-popup data-sound="tap">J'ai compris</button>
+    </div>
+  </div>
+
+  <th:block th:replace="~{fragments :: bravoPopup(${game}, ${stars})}"></th:block>
+  <th:block th:replace="~{fragments :: dommagePopup(${game})}"></th:block>
+</main>
+</body>
+</html>

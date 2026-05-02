@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sudoku 4×4</title>
+  <link rel="icon" th:href="@{/favicon.svg}" type="image/svg+xml">
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+  <script defer th:src="@{/js/effects.js}"></script>
+</head>
+<body data-page="sudoku"
+      th:data-result-sound="${game.message}"
+      th:data-outcome="${game.outcome}"
+      th:data-rules-key="${'sudoku-' + game.difficulty.name()}">
+<main class="page game-page">
+  <header class="game-header card-panel">
+    <div>
+      <a class="text-link" th:href="@{/}">Accueil</a>
+      <h1 th:text="${game.gameType.label}">Sudoku</h1>
+      <p th:text="${game.playerName + ' · Niveau ' + game.difficulty.label}">Joueur</p>
+    </div>
+    <div class="header-actions">
+      <button class="icon-button" type="button" data-open-popup="rulesPopup" data-sound="tap" aria-label="Règles du jeu">?</button>
+      <form th:action="@{/game/{id}/save(id=${game.id})}" method="post">
+        <button class="secondary-button" type="submit" data-sound="tap">Sauvegarder</button>
+      </form>
+    </div>
+  </header>
+
+  <section class="stats card-panel">
+    <div><span>Coups</span><strong th:text="${game.moves}">0</strong></div>
+    <div><span>Cases OK</span><strong th:text="${game.matchedPairs + '/16'}">0/16</strong></div>
+    <div><span>Progression</span><strong th:text="${game.progressPercent + '%'}">0%</strong></div>
+    <div class="timer" data-timer
+         th:data-elapsed-seconds="${game.elapsedSeconds}"
+         th:data-time-limit-seconds="${game.timeLimitSeconds}"
+         th:data-tick-form-id="|tickForm-${game.id}|">
+      <span>Temps</span><strong>00:00</strong>
+    </div>
+  </section>
+
+  <p class="message" th:if="${game.message}" th:text="${game.message}">Message</p>
+
+  <th:block th:replace="~{fragments :: tickForm(${game})}"></th:block>
+
+  <section class="card-panel sudoku-wrap" th:classappend="${game.xSudoku ? ' x-sudoku' : ''}">
+    <p class="eyebrow" th:text="${game.gameType.description}">Description</p>
+    <div class="sudoku-grid" th:classappend="${game.xSudoku ? ' x-sudoku' : ''}">
+      <th:block th:each="cell, it : ${game.sudokuGrid}">
+        <div th:with="ix=${it.index}, fixed=${game.sudokuFixed[it.index]}, sol=${game.sudokuSolution[it.index]}"
+             class="sudoku-cell"
+             th:classappend="|${fixed ? 'fixed ' : ''}${cell == 0 ? 'empty ' : ''}${cell != 0 and !fixed and cell == sol ? 'correct ' : ''}${cell != 0 and !fixed and cell != sol ? 'wrong ' : ''}${ix % 4 == 1 ? 'br ' : ''}${ix >= 4 and ix <= 7 ? 'bb ' : ''}|">
+          <span th:if="${cell != 0}" class="sudoku-digit" th:text="${cell}">1</span>
+          <div th:unless="${cell != 0}" class="sudoku-pad">
+            <form th:each="v : ${ {1,2,3,4} }" th:action="@{/game/{id}/sudoku(id=${game.id})}" method="post" class="pad-form">
+              <input type="hidden" name="cell" th:value="${it.index}">
+              <input type="hidden" name="value" th:value="${v}">
+              <button type="submit" data-sound="tap" class="pad-btn">
+                <span class="pad-digit" th:text="${v}">1</span>
+              </button>
+            </form>
+          </div>
+          <form th:if="${cell != 0 and !game.sudokuFixed[it.index]}" th:action="@{/game/{id}/sudoku(id=${game.id})}" method="post" class="pad-clear">
+            <input type="hidden" name="cell" th:value="${it.index}">
+            <input type="hidden" name="value" value="0">
+            <button type="submit" data-sound="tap" class="clear-btn" title="Effacer">×</button>
+          </form>
+        </div>
+      </th:block>
+    </div>
+    <p class="hint">Chaque ligne, chaque colonne et chaque carré 2×2 doit contenir les 4 fruits sans répétition.</p>
+    <p class="hint" th:if="${game.xSudoku}"><strong>X-Sudoku :</strong> les deux diagonales doivent aussi contenir les 4 fruits une seule fois.</p>
+  </section>
+
+  <div class="popup rules-popup" id="rulesPopup" data-popup aria-hidden="true">
+    <div class="popup-content">
+      <h2>Règles — Sudoku 4×4</h2>
+      <p>Tapez sur une case vide puis choisissez un fruit. Chaque <strong>ligne</strong>, chaque <strong>colonne</strong> et chaque <strong>carré 2×2</strong> doit contenir les fruits 1, 2, 3 et 4 une seule fois.</p>
+      <p>Les bonnes valeurs deviennent vertes, les mauvaises rouges. Le bouton × efface une case.</p>
+      <p th:if="${game.xSudoku}" class="rule-extra">
+        Niveau <strong th:text="${game.difficulty.label}">Expert</strong> (X-Sudoku) : les <strong>deux diagonales</strong> doivent aussi contenir chaque fruit une seule fois.
+      </p>
+      <p th:if="${game.difficulty.master}" class="rule-extra">
+        Maître : presque toutes les cases sont vides au départ — à vous de tout reconstruire.
+      </p>
+      <button class="primary-button" type="button" data-close-popup data-sound="tap">J'ai compris</button>
+    </div>
+  </div>
+
+  <th:block th:replace="~{fragments :: bravoPopup(${game}, ${stars})}"></th:block>
+  <th:block th:replace="~{fragments :: dommagePopup(${game})}"></th:block>
+</main>
+</body>
+</html>
